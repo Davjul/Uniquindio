@@ -127,10 +127,7 @@ body { margin:0; font-family: sans-serif; }
   }
 }
 </style>
-
-
 </head>
-
 <body>
 
 <!-- Panel destinos -->
@@ -392,7 +389,8 @@ let modoNavegacion = false;
 let watchId = null;
 let edificiosVisitados = new Set();
 let destinoActivo = null;
-
+let rutaCompleta = null;
+let rutaRecorridaCoords = [];
 
 
 // ================= LOAD =================
@@ -434,6 +432,8 @@ function seleccionarDestino(nombre) {
   calcularRuta(
     { lng: origen.lng, lat: origen.lat },
     destinos[nombre]
+    
+    
   );
 
   mostrarEdificio(nombre);
@@ -548,46 +548,59 @@ function actualizarPosicion(pos) {
   if (!modoNavegacion || !marcadorUsuario) return;
 
   const { latitude, longitude, heading } = pos.coords;
-
   const nuevaPos = [longitude, latitude];
 
   // Mover marcador
   marcadorUsuario.setLngLat(nuevaPos);
 
-  // Calcular orientación
+  // Orientación
   const bearing = heading !== null ? heading : map.getBearing();
 
-  // Mover cámara suavemente
- map.easeTo({
-  center: nuevaPos,
-  bearing: bearing,
-  zoom: ES_MOVIL ? 18.5 : 18,
-  pitch: ES_MOVIL ? 70 : 65,
-  duration: 1000
-});
+  // Cámara
+  map.easeTo({
+    center: nuevaPos,
+    bearing: bearing,
+    zoom: ES_MOVIL ? 18.5 : 18,
+    pitch: ES_MOVIL ? 70 : 65,
+    duration: 1000
+  });
 
+  // ===== RUTA RECORRIDA =====
+  rutaRecorridaCoords.push(nuevaPos);
 
-  Object.keys(destinos).forEach(nombre => {
-  if (edificiosVisitados.has(nombre)) return;
-
-  const destino = destinos[nombre];
-  const edificio = edificios[nombre];
-  if (!edificio) return;
-
-  const distancia = distanciaMetros(
-    pos.coords.latitude,
-    pos.coords.longitude,
-    destino.lat,
-    destino.lng
-  );
-
-  if (distancia < 5) { 
-    edificiosVisitados.add(nombre);
-    mostrarPopupEdificio(nombre);
+  const src = map.getSource("ruta-recorrida");
+  if (src) {
+    src.setData({
+      type: "Feature",
+      geometry: {
+        type: "LineString",
+        coordinates: rutaRecorridaCoords
+      }
+    });
   }
-});
 
+  // ===== POPUPS POR PROXIMIDAD =====
+  Object.keys(destinos).forEach(nombre => {
+    if (edificiosVisitados.has(nombre)) return;
+
+    const destino = destinos[nombre];
+    const edificio = edificios[nombre];
+    if (!edificio) return;
+
+    const distancia = distanciaMetros(
+      latitude,
+      longitude,
+      destino.lat,
+      destino.lng
+    );
+
+    if (distancia < 5) {
+      edificiosVisitados.add(nombre);
+      mostrarPopupEdificio(nombre);
+    }
+  });
 }
+
 
 
 //------MODO NAVEGACIÓN--------//
@@ -634,6 +647,10 @@ async function calcularRuta(origen, destino) {
   const response = await fetch(url);
   const data = await response.json();
   if (!data.features || !data.features.length) return;
+  rutaCompleta = data.features[0].geometry.coordinates;
+rutaRecorridaCoords = [];
+
+  
 
   const resumen = data.features[0].properties.summary;
   document.getElementById("infoRuta").innerHTML = `
@@ -652,6 +669,30 @@ async function calcularRuta(origen, destino) {
     source: "ruta",
     paint: { "line-color": "#0066ff", "line-width": 6 }
   });
+  if (!map.getSource("ruta-recorrida")) {
+  map.addSource("ruta-recorrida", {
+    type: "geojson",
+    data: {
+      type: "Feature",
+      geometry: {
+        type: "LineString",
+        coordinates: []
+      }
+    }
+  });
+
+  map.addLayer({
+    id: "ruta-recorrida",
+    type: "line",
+    source: "ruta-recorrida",
+    paint: {
+      "line-color": "#ff0000",
+      "line-width": 6,
+      "line-opacity": 0.9
+    }
+  });
+}
+
 
   const bounds = new maplibregl.LngLatBounds();
   data.features[0].geometry.coordinates.forEach(c => bounds.extend(c));
@@ -660,4 +701,3 @@ async function calcularRuta(origen, destino) {
 </script>
 </body>
 </html>
-
