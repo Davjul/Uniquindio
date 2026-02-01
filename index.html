@@ -496,21 +496,14 @@ function seleccionarDestino(nombre) {
   calcularRuta(
     { lng: origen.lng, lat: origen.lat },
     destinos[nombre]
-    
-    
   );
 
   mostrarEdificio(nombre);
 
-  if (ES_MOVIL) {
-    activarModoNavegacion();
-  };
-  if (ES_MOVIL) {
+  // 👇 MOSTRAR botón
   document.getElementById("btnNavegar").classList.remove("oculto");
 }
 
-
-}
 
 function mostrarEdificio(nombre) {
   const panel = document.getElementById("panelEdificio");
@@ -777,7 +770,7 @@ rutaRecorridaCoords = [];
     paint: {
       "line-color": "#ff0000",
       "line-width": 6,
-      "line-opacity": 0.9
+      "line-opacity": 0.1
     }
   });
 }
@@ -787,7 +780,7 @@ rutaRecorridaCoords = [];
   data.features[0].geometry.coordinates.forEach(c => bounds.extend(c));
   map.fitBounds(bounds, { padding: 50, pitch: 60 });
 }
-// ===== BOTÓN INICIAR NAVEGACIÓN =====
+// ================= BOTÓN INICIAR NAVEGACIÓN =================
 const btnNavegar = document.getElementById("btnNavegar");
 
 if (btnNavegar) {
@@ -796,6 +789,7 @@ if (btnNavegar) {
     btnNavegar.classList.add("oculto");
   };
 }
+
 
 </script>
 </body>
