@@ -84,6 +84,36 @@ body { margin:0; font-family: sans-serif; }
   border-radius: 6px;
   font-size: 12px;
 }
+.nivel {
+  margin-top: 8px;
+  padding: 8px;
+  background: #f2f2f2;
+  border-radius: 6px;
+  font-size: 12px;
+}
+
+/* ===== Galería de imágenes por nivel ===== */
+.galeria {
+  display: flex;
+  gap: 6px;
+  margin-top: 4px;
+  flex-wrap: wrap;
+}
+
+.galeria img {
+  width: 256px;
+  height: 192px;
+  object-fit: cover;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.galeria img:hover {
+  transform: scale(1.05);
+}
+
+
 
 .marker-usuario {
   width: 16px;
@@ -193,7 +223,7 @@ const destinos = {
 // ================= EDIFICIOS =================
 const edificios = {
   "Bloque Administrativo #1": {
-    codigo: "ZONA: A1-GUAYACÁN",
+    codigo: "A1-GUAYACÁN",
     zonaClase: "zona-guayacan",
     imagenGeneral: "Img/bloque1ext.JPG",
     descripcion: "Edificio administrativo central de la Universidad del Quindío.",
@@ -345,9 +375,10 @@ const edificios = {
       }
      }
     },
-  "Centro de acopio": {
-    codigo: "B12-GUADUALES",
-    zonaClase: "zona-guaduales",
+    "Bienestar Institucional": {
+    codigo: "C2-CÁMBULOS",
+    zonaClase: "zona-cambulos",
+    imagenGeneral: "Img/BienestarExt1.jpg",
     descripcion: "Auditorio Ubicado en el bloque de Ciencias Básicas. Nombrado así en honor a su primer rector, licenciado en pedagogía, doctor en ciencias políticas y escritor, quien fuera directivo en los años 1961 y 1964 ",
     niveles:{
       "Nivel 1":{
@@ -358,10 +389,9 @@ const edificios = {
       }
      }
     },
-  "Bienestar Institucional": {
-    codigo: "ZONA: C2-CÁMBULOS",
-    zonaClase: "zona-cambulos",
-    imagenGeneral: "Img/BienestarExt1.jpg",
+  "Centro de acopio": {
+    codigo: "B12-GUADUALES",
+    zonaClase: "zona-guaduales",
     descripcion: "Auditorio Ubicado en el bloque de Ciencias Básicas. Nombrado así en honor a su primer rector, licenciado en pedagogía, doctor en ciencias políticas y escritor, quien fuera directivo en los años 1961 y 1964 ",
     niveles:{
       "Nivel 1":{
@@ -485,15 +515,31 @@ function mostrarEdificio(nombre) {
 
   // NIVELES DEL EDIFICIO
   Object.keys(edificio.niveles).forEach(nivel => {
-    const info = edificio.niveles[nivel];
+  const info = edificio.niveles[nivel];
 
-    html += `
-      <div class="nivel">
-        <strong>${nivel}</strong><br>
-        ${info.descripcion || ""}
-      </div>
-    `;
-  });
+  html += `
+    <div class="nivel">
+      <strong>${nivel}</strong><br>
+      ${info.descripcion || ""}
+  `;
+
+  if (info.fotos && info.fotos.length) {
+    html += `<div class="galeria">`;
+
+    info.fotos.forEach(foto => {
+      html += `
+        <img src="${MEDIA_BASE_URL}/${foto}" alt="${nivel}">
+      `;
+    });
+    
+
+    html += `</div>`;
+  }
+
+  html += `</div>`;
+});
+
+
 
   //PINTAR PANEL
   panel.innerHTML = html;
