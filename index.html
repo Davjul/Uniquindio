@@ -53,11 +53,27 @@ body { margin:0; font-family: sans-serif; }
   box-shadow: 0 5px 18px rgba(0,0,0,0.25);
   z-index: 10;
 }
+/* ===== Botón navegación móvil ===== */
+.btn-navegar {
+  position: absolute;
+  bottom: 80px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #0066ff;
+  color: white;
+  border: none;
+  padding: 12px 18px;
+  border-radius: 20px;
+  font-size: 14px;
+  z-index: 20;
+}
+
 .imagen-edificio {
   width: 100%;
   border-radius: 8px;
   margin-bottom: 8px;
 }
+
 .codigo-zona {
   display: inline-block;
   padding: 4px 8px;
@@ -158,6 +174,7 @@ body { margin:0; font-family: sans-serif; }
 </head>
 <body>
 
+
 <!-- Panel destinos -->
 <div id="panel">
   <h3>¿A dónde quieres ir?</h3>
@@ -169,6 +186,11 @@ body { margin:0; font-family: sans-serif; }
 <div id="panelEdificio" class="oculto"></div>
 
 <div id="map"></div>
+
+<button id="btnNavegar" class="btn-navegar oculto">
+  Iniciar navegación
+</button>
+
 
 <script>
 
@@ -220,7 +242,7 @@ const destinos = {
 
 // ================= EDIFICIOS =================
 const edificios = {
-  "Bloque Administrativo #1": {
+   "Bloque Administrativo #1": {
     codigo: "A1-GUAYACÁN",
     zonaClase: "zona-guayacan",
     imagenGeneral: "Img/bloque1ext.JPG",
@@ -482,7 +504,11 @@ function seleccionarDestino(nombre) {
 
   if (ES_MOVIL) {
     activarModoNavegacion();
-  }
+  };
+  if (ES_MOVIL) {
+  document.getElementById("btnNavegar").classList.remove("oculto");
+}
+
 
 }
 
@@ -612,7 +638,11 @@ function actualizarPosicion(pos) {
   marcadorUsuario.setLngLat(nuevaPos);
 
   // Orientación
-  const bearing = heading !== null ? heading : map.getBearing();
+  const bearing =
+  heading !== null && !isNaN(heading)
+    ? heading
+    : map.getBearing();
+
 
   // Cámara
   map.easeTo({
@@ -671,14 +701,15 @@ function activarModoNavegacion() {
 
   // Activar seguimiento continuo
   watchId = navigator.geolocation.watchPosition(
-    actualizarPosicion,
-    err => console.error("GPS error", err),
-    {
-      enableHighAccuracy: true,
-      maximumAge: 1000,
-      timeout: 5000
-    }
-  );
+  actualizarPosicion,
+  err => console.error("GPS error", err),
+  {
+    enableHighAccuracy: true,
+    maximumAge: 0,
+    timeout: 10000
+  }
+);
+
 
   // Bloquear rotación manual (opcional)
   map.dragRotate.disable();
@@ -756,6 +787,16 @@ rutaRecorridaCoords = [];
   data.features[0].geometry.coordinates.forEach(c => bounds.extend(c));
   map.fitBounds(bounds, { padding: 50, pitch: 60 });
 }
+// ===== BOTÓN INICIAR NAVEGACIÓN =====
+const btnNavegar = document.getElementById("btnNavegar");
+
+if (btnNavegar) {
+  btnNavegar.onclick = () => {
+    activarModoNavegacion();
+    btnNavegar.classList.add("oculto");
+  };
+}
+
 </script>
 </body>
 </html>
