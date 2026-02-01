@@ -41,7 +41,7 @@ body { margin:0; font-family: sans-serif; }
 
 #panel li:hover { background: #003bb3; }
 
-/* ===== Panel edificio (ARRIBA DERECHA) ===== */
+/* ===== Panel edificio ===== */
 #panelEdificio {
   position: absolute;
   top: 20px;
@@ -54,18 +54,12 @@ body { margin:0; font-family: sans-serif; }
   z-index: 10;
 }
 
-#panelEdificio h4 {
-  margin: 6px 0;
-}
-
-/* ===== Imagen general ===== */
 .imagen-edificio {
   width: 100%;
   border-radius: 8px;
   margin-bottom: 8px;
 }
 
-/* ===== Código de zona ===== */
 .codigo-zona {
   display: inline-block;
   padding: 4px 8px;
@@ -76,16 +70,13 @@ body { margin:0; font-family: sans-serif; }
   margin-bottom: 6px;
 }
 
-/* Colores por zona */
 .zona-guayacan { background: #f1e66c; }
 .zona-guaduales { background: #8ab844; }
 .zona-cambulos { background: #e49645; }
 .zona-gualanday { background: #625595; }
 .zona-platanillas { background: #b54d55; }
-.zona-guamos{ background: #90bccb; }
+.zona-guamos { background: #90bccb; }
 
-
-/* ===== Niveles ===== */
 .nivel {
   margin-top: 8px;
   padding: 8px;
@@ -94,21 +85,6 @@ body { margin:0; font-family: sans-serif; }
   font-size: 12px;
 }
 
-.galeria {
-  display: flex;
-  gap: 6px;
-  margin-top: 6px;
-  flex-wrap: wrap;
-}
-
-.galeria img {
-  width: 70px;
-  height: 50px;
-  object-fit: cover;
-  border-radius: 4px;
-}
-
-/* ===== Marker usuario ===== */
 .marker-usuario {
   width: 16px;
   height: 16px;
@@ -117,26 +93,24 @@ body { margin:0; font-family: sans-serif; }
   box-shadow: 0 0 10px rgba(255,0,0,0.8);
   border: 2px solid white;
 }
-</style>
-@media (max-width: 768px) {
 
+.oculto {
+  display: none;
+}
+
+/* ===== MÓVIL ===== */
+@media (max-width: 768px) {
   #panel {
     width: calc(100% - 20px);
     left: 10px;
-    top: auto;
     bottom: 10px;
-    border-radius: 12px;
+    top: auto;
   }
 
   #panel ul {
     display: flex;
     overflow-x: auto;
     gap: 6px;
-  }
-
-  #panel li {
-    white-space: nowrap;
-    font-size: 12px;
   }
 
   #panelEdificio {
@@ -151,8 +125,9 @@ body { margin:0; font-family: sans-serif; }
     max-height: 120px;
     object-fit: cover;
   }
-
 }
+</style>
+
 
 </head>
 
@@ -177,9 +152,9 @@ const apiKey = "Bwc5E9Mj426Ga6cevHzX";
 const ORS_API_KEY = "eyJvcmciOiI1YjNjZTM1OTc4NTExMTAwMDFjZjYyNDgiLCJpZCI6IjllOGM5M2FkZmQ2MjQwZGE5NGE1YmVmMjM3MmZjM2JmIiwiaCI6Im11cm11cjY0In0=";
 const ES_MOVIL = window.innerWidth <= 768;
 // ================= BASE DE IMÁGENES =================
-const MEDIA_BASE_URL = "https://upload.wikimedia.org/wikipedia/commons";
 
-
+const MEDIA_BASE_URL = "https://davjul.github.io/Uniquindio";
+ 
 // ================= DESTINOS =================
 const destinos = {
   "Bloque Administrativo #1": { lng: -75.6591559, lat: 4.5528674 },
@@ -223,14 +198,13 @@ const edificios = {
   "Bloque Administrativo #1": {
     codigo: "A1-GUAYACÁN",
     zonaClase: "zona-guayacan",
-    imagenGeneral: "bloque_admin_1_general.jpg",
+    imagenGeneral: "Img/bloque1ext.JPG",
     descripcion: "Edificio administrativo central de la Universidad del Quindío.",
     niveles: {
       "Nivel 1":{
         descripcion: "Atención al ciudadano y recepción",
         fotos: [
-      "bloque1ext.jpg",
-      "bloque2ext.jpg"
+      "Img/bloque2ext.JPG"
         ]
       },
     "Nivel 2":{
@@ -479,6 +453,7 @@ function mostrarEdificio(nombre) {
     return;
   }
 
+  // CONTENIDO BASE DEL PANEL
   let html = `
     <div class="codigo-zona ${edificio.zonaClase}">
       ${edificio.codigo}
@@ -487,12 +462,14 @@ function mostrarEdificio(nombre) {
     <p>${edificio.descripcion}</p>
   `;
 
+  // IMAGEN GENERAL 
   if (edificio.imagenGeneral) {
     html = `
-      <img class="imagen-edificio" src="${MEDIA_BASE_URL}/${edificio.imagenGeneral}">
+      <img class="imagen-edificio" src="${edificio.imagenGeneral}">
     ` + html;
   }
 
+  // NIVELES DEL EDIFICIO
   Object.keys(edificio.niveles).forEach(nivel => {
     const info = edificio.niveles[nivel];
 
@@ -504,6 +481,7 @@ function mostrarEdificio(nombre) {
     `;
   });
 
+  //PINTAR PANEL
   panel.innerHTML = html;
   panel.classList.remove("oculto");
 }
@@ -682,3 +660,4 @@ async function calcularRuta(origen, destino) {
 </script>
 </body>
 </html>
+
