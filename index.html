@@ -154,18 +154,65 @@ body { margin:0; font-family: sans-serif; }
   }
 
   #panelEdificio {
-    width: calc(100% - 20px);
-    right: 10px;
-    top: 10px;
-    max-height: 45vh;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    top: auto;
+    width: 100%;
+    max-height: 65vh;
+    border-radius: 16px 16px 0 0;
     overflow-y: auto;
+    z-index: 25;
   }
+
 
   .imagen-edificio {
     max-height: 120px;
     object-fit: cover;
   }
 }
+.buscador-movil {
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: calc(100% - 20px);
+  max-width: 480px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,.2);
+  z-index: 30;
+  padding: 8px;
+}
+
+.buscador-movil input {
+  width: 100%;
+  padding: 10px 12px;
+  font-size: 15px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  outline: none;
+}
+
+#sugerencias {
+  list-style: none;
+  margin: 6px 0 0;
+  padding: 0;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+#sugerencias li {
+  padding: 10px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+#sugerencias li:hover {
+  background: #f2f2f2;
+}
+
 </style>
 </head>
 <body>
@@ -188,6 +235,15 @@ body { margin:0; font-family: sans-serif; }
 </button>
 
 
+<div id="buscadorMovil" class="buscador-movil oculto">
+  <input
+    type="text"
+    id="inputBusqueda"
+    placeholder="Buscar edificio o lugar…"
+    autocomplete="off"
+  >
+  <ul id="sugerencias"></ul>
+</div>
 
 
 
@@ -505,6 +561,8 @@ map.on("load", () => {
     lista.appendChild(li);
   });
 });
+map.dragRotate.enable();
+map.touchZoomRotate.enableRotation();
 
 // ================= FUNCIONES =================
 
@@ -548,6 +606,8 @@ function mostrarEdificio(nombre) {
     panel.classList.add("oculto");
     return;
   }
+
+  
 
   // CONTENIDO BASE DEL PANEL
   let html = `
@@ -663,6 +723,34 @@ function mostrarPopupEdificio(nombre) {
     `)
     .addTo(map);
 }
+
+if (ES_MOVIL) {
+  document.getElementById("buscadorMovil").classList.remove("oculto");
+  document.getElementById("panel").style.display = "none";
+}
+
+const input = document.getElementById("inputBusqueda");
+const sugerencias = document.getElementById("sugerencias");
+
+input.addEventListener("input", () => {
+  const texto = input.value.toLowerCase();
+  sugerencias.innerHTML = "";
+
+  if (texto.length < 2) return;
+
+  Object.keys(destinos)
+    .filter(nombre => nombre.toLowerCase().includes(texto))
+    .forEach(nombre => {
+      const li = document.createElement("li");
+      li.textContent = nombre;
+      li.onclick = () => {
+        sugerencias.innerHTML = "";
+        input.value = nombre;
+        seleccionarDestino(nombre);
+      };
+      sugerencias.appendChild(li);
+    });
+});
 
 
 function ubicarUsuario() {
@@ -912,4 +1000,3 @@ if (btnNavegar) {
 </script>
 </body>
 </html>
-
