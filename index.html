@@ -485,9 +485,10 @@ document.getElementById("btnRotar").onclick = () => {
     map.dragRotate.enable();
     map.touchZoomRotate.enableRotation();
   } else {
-    map.dragRotate.disable();
-    map.touchZoomRotate.disableRotation();
+    map.dragRotate.enable();
+    map.touchZoomRotate.enableRotation();
   }
+  
 };
 
 
