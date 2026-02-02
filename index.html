@@ -1,3 +1,5 @@
+bearingSuavizado = null;
+ultimaPosicionSuavizada = null;
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -91,13 +93,6 @@ body { margin:0; font-family: sans-serif; }
 .zona-platanillas { background: #b54d55; }
 .zona-guamos { background: #90bccb; }
 
-.nivel {
-  margin-top: 8px;
-  padding: 8px;
-  background: #f2f2f2;
-  border-radius: 6px;
-  font-size: 12px;
-}
 .nivel {
   margin-top: 8px;
   padding: 8px;
@@ -623,7 +618,7 @@ function recortarRutaDesdePosicion(posicionActual) {
       coord[0]
     );
 
-    if (dist < menorDistancia) {
+    if (dist < menorDistancia && dist < 15) {
       menorDistancia = dist;
       indiceMasCercano = index;
     }
@@ -685,7 +680,7 @@ function verificarLlegada(lat, lng) {
     destino.lng
   );
 
-  return distancia < 5; 
+  return distancia < 10; 
 }
 
 function actualizarPosicion(pos) {
@@ -711,9 +706,9 @@ if (typeof heading === "number" && heading >= 0 && heading <= 360) {
       bearingSuavizado + (heading - bearingSuavizado) * FACTOR_BEARING;
   }
   nuevoBearing = bearingSuavizado;
-recortarRutaDesdePosicion(nuevaPos);
 }
-
+// SIEMPRE recortar ruta
+recortarRutaDesdePosicion(nuevaPos);
 
 
   // Cámara
@@ -768,6 +763,8 @@ function activarModoNavegacion() {
   if (modoNavegacion) return;
 
   modoNavegacion = true;
+  bearingSuavizado = null;
+ultimaPosicionSuavizada = null;
 
   // Ocultar panel en móvil
   if (ES_MOVIL) {
