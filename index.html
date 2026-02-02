@@ -396,7 +396,7 @@ const edificios = {
      }
     },
   "Zona Intercultural": {
-    codigo: "B13-GUADUALES",
+    codigo: "Zona: B13-GUADUALES",
     zonaClase: "zona-guaduales",
     imagenGeneral: "Img/InterculturalExt1.jpg",
     descripcion: " inaugurado en 2025, diseñado para la integración, descanso y sano esparcimiento. Sirve como punto de encuentro para actividades artísticas, culturales y de salud mental, buscando humanizar la vida universitaria y ofrecer alternativas al consumo de sustancias bajo la supervisión de Bienestar Institucional.",
@@ -609,6 +609,41 @@ function distanciaMetros(lat1, lon1, lat2, lon2) {
 
   return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 }
+function recortarRutaDesdePosicion(posicionActual) {
+  if (!rutaCompleta || rutaCompleta.length === 0) return;
+
+  let indiceMasCercano = 0;
+  let menorDistancia = Infinity;
+
+  rutaCompleta.forEach((coord, index) => {
+    const dist = distanciaMetros(
+      posicionActual[1],
+      posicionActual[0],
+      coord[1],
+      coord[0]
+    );
+
+    if (dist < menorDistancia) {
+      menorDistancia = dist;
+      indiceMasCercano = index;
+    }
+  });
+
+  // Nueva ruta = lo que falta
+  const rutaRestante = rutaCompleta.slice(indiceMasCercano);
+
+  const src = map.getSource("ruta");
+  if (src) {
+    src.setData({
+      type: "Feature",
+      geometry: {
+        type: "LineString",
+        coordinates: rutaRestante
+      }
+    });
+  }
+}
+
 
 function mostrarPopupEdificio(nombre) {
   const edificio = edificios[nombre];
@@ -676,6 +711,7 @@ if (typeof heading === "number" && heading >= 0 && heading <= 360) {
       bearingSuavizado + (heading - bearingSuavizado) * FACTOR_BEARING;
   }
   nuevoBearing = bearingSuavizado;
+recortarRutaDesdePosicion(nuevaPos);
 }
 
 
