@@ -461,12 +461,6 @@ const map = new maplibregl.Map({
 });
 map.dragRotate.enable();
 map.touchZoomRotate.enableRotation();
-map.addControl(
-  new maplibregl.NavigationControl({
-    showCompass: false, // ❌ elimina botón de giro
-    showZoom: true      // ✅ mantiene zoom
-  })
-);
 
 
 let marcadorUsuario = null;
