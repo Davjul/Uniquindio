@@ -244,7 +244,9 @@ body { margin:0; font-family: sans-serif; }
   >
   <ul id="sugerencias"></ul>
 </div>
-  
+
+
+
 <script>
 
 // ================= KEYS =================
@@ -855,6 +857,8 @@ function permitirRotacionMapa() {
   map.touchZoomRotate.enableRotation();
 }
 
+
+
 //------MODO NAVEGACIÓN--------//
 function activarModoNavegacion() {
   if (modoNavegacion) return;
@@ -923,6 +927,7 @@ function desactivarModoNavegacion() {
 }
 
 
+
 // ================= RUTA =================
 async function calcularRuta(origen, destino) {
   const url = `https://api.openrouteservice.org/v2/directions/foot-walking?api_key=${ORS_API_KEY}&start=${origen.lng},${origen.lat}&end=${destino.lng},${destino.lat}&format=geojson`;
@@ -934,6 +939,7 @@ async function calcularRuta(origen, destino) {
 rutaRecorridaCoords = [];
 
   
+
   const resumen = data.features[0].properties.summary;
   document.getElementById("infoRuta").innerHTML = `
     <strong>Ruta activa</strong><br>
@@ -989,6 +995,7 @@ if (btnNavegar) {
     btnNavegar.classList.add("oculto");
   };
 }
+
 
 </script>
 </body>
