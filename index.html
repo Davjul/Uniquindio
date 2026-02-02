@@ -461,7 +461,13 @@ const map = new maplibregl.Map({
 });
 map.dragRotate.enable();
 map.touchZoomRotate.enableRotation();
-map.addControl(new maplibregl.NavigationControl());
+map.addControl(
+  new maplibregl.NavigationControl({
+    showCompass: false, // ❌ elimina botón de giro
+    showZoom: true      // ✅ mantiene zoom
+  })
+);
+
 
 let marcadorUsuario = null;
 let modoNavegacion = false;
@@ -476,18 +482,6 @@ let bearingSuavizado = null;
 const FACTOR_BEARING = 0.08; // más bajo = más estable
 let rotacionActiva = false;
 
-document.getElementById("btnRotar").onclick = () => {
-  rotacionActiva = !rotacionActiva;
-
-  if (rotacionActiva) {
-    map.dragRotate.enable();
-    map.touchZoomRotate.enableRotation();
-  } else {
-    map.dragRotate.enable();
-    map.touchZoomRotate.enableRotation();
-  }
-  
-};
 
 
 
