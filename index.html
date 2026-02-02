@@ -183,6 +183,11 @@ body { margin:0; font-family: sans-serif; }
 <button id="btnNavegar" class="btn-navegar oculto">
   Iniciar navegación
 </button>
+<button id="btnRotar" class="btn-navegar">
+  Girar mapa
+</button>
+
+
 
 
 <script>
@@ -467,6 +472,21 @@ let ultimaPosicionSuavizada = null;
 const FACTOR_SUAVIZADO = 0.15; // entre 0.1 y 0.3
 let bearingSuavizado = null;
 const FACTOR_BEARING = 0.08; // más bajo = más estable
+let rotacionActiva = false;
+
+document.getElementById("btnRotar").onclick = () => {
+  rotacionActiva = !rotacionActiva;
+
+  if (rotacionActiva) {
+    map.dragRotate.enable();
+    map.touchZoomRotate.enableRotation();
+  } else {
+    map.dragRotate.disable();
+    map.touchZoomRotate.disableRotation();
+  }
+};
+
+
 
 
 // ================= LOAD =================
@@ -747,11 +767,16 @@ recortarRutaDesdePosicion(nuevaPos);
       destino.lng
     );
 
-    if (distancia < 15) {
+    if (distancia < 20) {
       edificiosVisitados.add(nombre);
       mostrarPopupEdificio(nombre);
     }
   });
+}
+
+function permitirRotacionMapa() {
+  map.dragRotate.enable();
+  map.touchZoomRotate.enableRotation();
 }
 
 
