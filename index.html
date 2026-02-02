@@ -1,5 +1,3 @@
-bearingSuavizado = null;
-ultimaPosicionSuavizada = null;
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -749,7 +747,7 @@ recortarRutaDesdePosicion(nuevaPos);
       destino.lng
     );
 
-    if (distancia < 5) {
+    if (distancia < 15) {
       edificiosVisitados.add(nombre);
       mostrarPopupEdificio(nombre);
     }
