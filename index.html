@@ -2,7 +2,6 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 <title>Mapa Universidad del Quindío</title>
 
 <link href="https://unpkg.com/maplibre-gl@3.6.1/dist/maplibre-gl.css" rel="stylesheet">
@@ -23,6 +22,25 @@ body { margin:0; font-family: sans-serif; }
   box-shadow: 0 5px 15px rgba(0,0,0,0.2);
   z-index: 10;
   width: 230px;
+}
+/* El contenedor del buscador manda */
+#uiBusqueda {
+  position: absolute;
+  top: 10px;
+  left: 0%;
+  transform: translateX(-50%);
+  width: calc(100% - 40px);
+  max-width: 360px;
+  z-index: 500;
+}
+
+/* Botón justo debajo del input */
+#btnNavegar {
+  position: absolute;
+  top: 90px;          /* 👈 controla qué tan abajo queda */
+  left: 50;
+  width: 20%;
+  height: 9%
 }
 
 #panel h3 { margin: 0 0 6px 0; font-size: 14px; }
@@ -89,6 +107,7 @@ body { margin:0; font-family: sans-serif; }
 .btn-iniciar {
   bottom: 80px;
 }
+
 .oculto {
   display: none !important;
 }
@@ -128,7 +147,7 @@ body { margin:0; font-family: sans-serif; }
 .galeria {
   display: flex;
   gap: 6px;
-  margin-top: 4px;
+  margin-top: 8px;
   flex-wrap: wrap;
 }
 
@@ -208,7 +227,7 @@ body { margin:0; font-family: sans-serif; }
 .buscador-movil input {
   width: 100%;
   padding: 10px 8px;
-  font-size: 16px;
+  font-size: 18px;
   border-radius: 8px;
   border: 1px solid #ddd;
   outline: none;
