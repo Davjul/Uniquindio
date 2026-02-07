@@ -39,8 +39,8 @@ body { margin:0; font-family: sans-serif; }
   position: absolute;
   top: 90px;          /* 👈 controla qué tan abajo queda */
   left: 50;
-  width: 20%;
-  height: 9%
+  width: 15%;
+  height: 5%
 }
 
 #panel h3 { margin: 0 0 6px 0; font-size: 14px; }
@@ -614,6 +614,7 @@ map.touchZoomRotate.enableRotation();
 
 // ================= FUNCIONES =================
 
+
 function suavizarPosicion(nueva, anterior) {
   if (!anterior) return nueva;
 
@@ -781,12 +782,23 @@ function mostrarPopupEdificio(nombre) {
     `)
     .addTo(map);
 }
-document.getElementById("buscadorMovil").classList.remove("oculto");
 
+function normalizarTexto(texto) {
+  return texto
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "");
+}
+document.getElementById("buscadorMovil").classList.remove("oculto");
 
 const input = document.getElementById("inputBusqueda");
 const sugerencias = document.getElementById("sugerencias");
-
+function normalizarTexto(texto) {
+  return texto
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "");
+}
 input.addEventListener("input", () => {
   const texto = input.value.toLowerCase();
   sugerencias.innerHTML = "";
@@ -873,13 +885,18 @@ recortarRutaDesdePosicion(nuevaPos);
 
 
   // Cámara
-  map.easeTo({
-    center: nuevaPos,
-    bearing: nuevoBearing,
-    zoom: ES_MOVIL ? 19.5 : 18.8,
-    pitch: ES_MOVIL ? 80 : 70,
-    duration: 700
-  });
+ map.easeTo({
+  center: nuevaPos,
+  bearing: nuevoBearing,
+  zoom: ES_MOVIL ? 19.5 : 18.8,
+  pitch: ES_MOVIL ? 80 : 70,
+
+  // visualmente el centro
+  offset: [0, ES_MOVIL ? 120 : 80],
+
+  duration: 700
+});
+
 
   // ===== RUTA RECORRIDA =====
   rutaRecorridaCoords.push(nuevaPos);
