@@ -892,7 +892,7 @@ recortarRutaDesdePosicion(nuevaPos);
   pitch: ES_MOVIL ? 80 : 70,
 
   // visualmente el centro
-  offset: [0, ES_MOVIL ? 0: 140],
+  offset: [0, ES_MOVIL ? 160 : 140],
 
   duration: 700
 });
@@ -961,13 +961,21 @@ ultimaPosicionSuavizada = null;
   map.doubleClickZoom.enable();
   map.touchZoomRotate.enable();
 
-  // 🎯 Cámara inmersiva inicial
-  map.easeTo({
-    zoom: 19.5,
-    pitch: 80,
-    bearing: map.getBearing(),
-    duration: 1200
-  });
+  //  Cámara inmersiva 
+ const pos = marcadorUsuario.getLngLat();
+
+map.easeTo({
+  center: [pos.lng, pos.lat],
+  zoom: 19.5,
+  pitch: 80,
+  bearing: map.getBearing(),
+
+  // 👇 MISMO offset que navegación
+  offset: [0, 160],
+
+  duration: 1200
+});
+
 
   // 📡 GPS continuo
   watchId = navigator.geolocation.watchPosition(
