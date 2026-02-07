@@ -99,9 +99,9 @@ body { margin:0; font-family: sans-serif; }
   background: #0066ff;
   color: white;
   border: none;
-  padding: 24px 36px;
+  padding: 20px 20px;
   border-radius: 20px;
-  font-size: 14px;
+  font-size: 16px;
   z-index: 1000;
 }
 .btn-iniciar {
@@ -613,6 +613,18 @@ map.dragRotate.enable();
 map.touchZoomRotate.enableRotation();
 
 // ================= FUNCIONES =================
+function puntoAdelante(lng, lat, bearing, metros = 20) {
+  const R = 6378137; // radio tierra
+  const brng = bearing * Math.PI / 180;
+
+  const dLat = metros * Math.cos(brng) / R;
+  const dLng = metros * Math.sin(brng) / (R * Math.cos(lat * Math.PI / 180));
+
+  return [
+    lng + (dLng * 180 / Math.PI),
+    lat + (dLat * 180 / Math.PI)
+  ];
+}
 
 
 function suavizarPosicion(nueva, anterior) {
@@ -885,22 +897,22 @@ recortarRutaDesdePosicion(nuevaPos);
 
 
   // Cámara
+// punto adelantado según orientación
+const centroVisual = puntoAdelante(
+  nuevaPos[0],
+  nuevaPos[1],
+  nuevoBearing,
+  ES_MOVIL ? 25 : 18
+);
+
 map.easeTo({
-  center: nuevaPos,
+  center: centroVisual,
   bearing: nuevoBearing,
   zoom: ES_MOVIL ? 19.5 : 18.8,
   pitch: ES_MOVIL ? 80 : 70,
-
-  // Centro
-  padding: {
-    top: ES_MOVIL ? 200 : 120,
-    bottom: 0,
-    left: 0,
-    right: 0
-  },
-
   duration: 700
 });
+
 
 
   // ===== RUTA RECORRIDA =====
@@ -968,22 +980,21 @@ ultimaPosicionSuavizada = null;
 
   //  Cámara inmersiva 
 const pos = marcadorUsuario.getLngLat();
+const centroInicial = puntoAdelante(
+  pos.lng,
+  pos.lat,
+  map.getBearing(),
+  25
+);
 
 map.easeTo({
-  center: [pos.lng, pos.lat],
+  center: centroInicial,
   zoom: 19.5,
   pitch: 80,
   bearing: map.getBearing(),
-
-  padding: {
-    top: 200,
-    bottom: 0,
-    left: 0,
-    right: 0
-  },
-
   duration: 1200
 });
+
 
 
 
