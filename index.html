@@ -885,14 +885,19 @@ recortarRutaDesdePosicion(nuevaPos);
 
 
   // Cámara
- map.easeTo({
+map.easeTo({
   center: nuevaPos,
   bearing: nuevoBearing,
   zoom: ES_MOVIL ? 19.5 : 18.8,
   pitch: ES_MOVIL ? 80 : 70,
 
-  // visualmente el centro
-  offset: [0, ES_MOVIL ? 160 : 140],
+  // Centro
+  padding: {
+    top: ES_MOVIL ? 200 : 120,
+    bottom: 0,
+    left: 0,
+    right: 0
+  },
 
   duration: 700
 });
@@ -962,7 +967,7 @@ ultimaPosicionSuavizada = null;
   map.touchZoomRotate.enable();
 
   //  Cámara inmersiva 
- const pos = marcadorUsuario.getLngLat();
+const pos = marcadorUsuario.getLngLat();
 
 map.easeTo({
   center: [pos.lng, pos.lat],
@@ -970,11 +975,16 @@ map.easeTo({
   pitch: 80,
   bearing: map.getBearing(),
 
-  // 👇 MISMO offset que navegación
-  offset: [0, 160],
+  padding: {
+    top: 200,
+    bottom: 0,
+    left: 0,
+    right: 0
+  },
 
   duration: 1200
 });
+
 
 
   // 📡 GPS continuo
