@@ -69,6 +69,9 @@ body { margin:0; font-family: sans-serif; }
 }
 
 /* ===== Botón navegación móvil ===== */
+.oculto {
+  display: none !important;
+}
 .btn-navegar {
   position: fixed;
   bottom: 90px;
@@ -80,10 +83,13 @@ body { margin:0; font-family: sans-serif; }
   padding: 24px 36px;
   border-radius: 20px;
   font-size: 14px;
-  z-index: 40;
+  z-index: 1000;
 }
 .btn-iniciar {
   bottom: 80px;
+}
+.oculto {
+  display: none !important;
 }
 
 .imagen-edificio {
@@ -189,18 +195,18 @@ body { margin:0; font-family: sans-serif; }
   top: 10px;
   left: 50%;
   transform: translateX(-50%);
-  width: calc(100% - 20px);
-  max-width: 480px;
+  width: calc(100% - 50px);
+  max-width: 360px;
   background: white;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0,0,0,.2);
-  z-index: 30;
+  border-radius: 10px;
+  box-shadow: 0 15px 12px rgba(0,0,0,.2);
+  z-index: 100;
   padding: 8px;
 }
 
 .buscador-movil input {
-  width: 100%;
-  padding: 10px 12px;
+  width: 90%;
+  padding: 10px 8px;
   font-size: 15px;
   border-radius: 8px;
   border: 1px solid #ddd;
@@ -259,11 +265,6 @@ body { margin:0; font-family: sans-serif; }
 
 <div id="map"></div>
 
-<button id="btnNavegar" class="btn-navegar oculto">
-  Iniciar navegación
-</button>
-
-
 <div id="buscadorMovil" class="buscador-movil">
   <input
     type="text"
@@ -273,6 +274,11 @@ body { margin:0; font-family: sans-serif; }
   >
   <ul id="sugerencias"></ul>
 </div>
+
+<button id="btnNavegar" class="btn-navegar oculto">
+  Iniciar navegación
+</button>
+
 
 
 
@@ -612,12 +618,16 @@ function seleccionarDestino(nombre) {
 
   mostrarEdificio(nombre);
 
-  // 👇 RESETEAR navegación
+  document.getElementById("panel").style.display = "block";
+
   modoNavegacion = false;
 
   const btn = document.getElementById("btnNavegar");
+if (btn) {
   btn.classList.remove("oculto");
 }
+}
+
 
 function mostrarEdificio(nombre) {
   const panel = document.getElementById("panelEdificio");
@@ -908,11 +918,11 @@ ultimaPosicionSuavizada = null;
   }
 
   // 🔒 Bloquear interacción manual
-  map.dragPan.disable();
-  map.dragRotate.disable();
-  map.scrollZoom.disable();
-  map.doubleClickZoom.disable();
-  map.touchZoomRotate.disable();
+  map.dragPan.enable();
+  map.dragRotate.enable();
+  map.scrollZoom.enable();
+  map.doubleClickZoom.enable();
+  map.touchZoomRotate.enable();
 
   // 🎯 Cámara inmersiva inicial
   map.easeTo({
