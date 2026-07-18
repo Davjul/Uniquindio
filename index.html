@@ -325,10 +325,12 @@ const destinos = {
 
   "Edificio de Ciencias Básicas y Tecnologías": { lng: -75.6597840, lat: 4.5529046 },
   "Auditorio Bernardo Ramírez Granada": { lng: -75.6600830, lat: 4.5526310 },
- 
+
   "Instituto Interdisciplinario de las Ciencias": { lng: -75.6597762, lat: 4.5530214 },
   "Edificio de Aulas 50 años": { lng: -75.6600960, lat: 4.5534352 },
+
   "Vivero Universidad Jardín": { lng: -75.6608072, lat: 4.5534410 },
+  
   "Auditorio Jardín Botánico": { lng: -75.6608063, lat: 4.5533636 },  
   "Centro de Entrenamiento en Alturas": { lng: -75.6612422, lat: 4.5532833 },
   "Zona Intercultural": { lng: -75.6613910, lat: 4.5531892 },  
@@ -346,16 +348,33 @@ const destinos = {
   "Media Torta - Teatro al aire libre": { lng: -75.6590750, lat: 4.5555646 },
   "Centro de Salud": { lng: -75.6587919, lat: 4.5556343 },
 
-  "Edificio Facultad de Educación": { lng: -75.6609937, lat: 4.5552083 },
-  "Edificio Facultad de Económicas": { lng: -75.6614602, lat: 4.5549764 },
-  "Facultad de Agroindustria": { lng: -75.6616901, lat: 4.5547966 },
-
   "Ciencias de la Salud": { lng: -75.6587961, lat: 4.5562350 },
+  "Auditorio Ciencias de la Salud": { lng: -75.6587961, lat: 4.5562350 },
+  "UFM Estéreo": { lng: -75.6587961, lat: 4.5562350 },
+
+  "Laboratorio de Ciencias Biomédicas": { lng: -75.660125, lat: 4.556482 }, 
+
   "Biblioteca CRAI": { lng: -75.6595813, lat: 4.5564278 },
+  "Auditorio Euclídes Jaramillo Arango": { lng: -75.659720, lat: 4.556094 },
+  "Ludoteca Infantil": { lng: -75.659430, lat: 4.555845 },  
+  "Zona de Estudio María Cano": { lng: -75.659586, lat: 4.556174 }, 
+  "Capilla Universitaria": { lng: -75.659342, lat: 4.556220 }, 
+  "Oficina de Publicaciones": { lng: -75.659575, lat: 4.556145 }, 
+  "Oficina de Innovación": { lng: -75.659720, lat: 4.556094 },
+
+
   "Facultad de Ingeniería": { lng: -75.6600693, lat: 4.5559045 },
   "Auditorio Fabio Arias Vélez": { lng: -75.6600693, lat: 4.5559045 },
-  "Auditorio Euclídes Jaramillo Arango": { lng: -75.659720, lat: 4.556094 } 
+  
+  "Edificio Facultad de Educación": { lng: -75.6609937, lat: 4.5552083 },
 
+  "Edificio Facultad de Ciencias Económicas": { lng: -75.6614602, lat: 4.5549764 },
+  "Auditorio Ciencias Económicas 501": { lng: -75.659720, lat: 4.556094 },
+  "Auditorio Ciencias Económicas 502": { lng: -75.659720, lat: 4.556094 }, 
+
+  "Facultad de Ciencias Agroindustriales": { lng: -75.661455, lat: 4.554960 },
+  "Auditorio Facultad de Ciencias Agroindustriales ": { lng: -75.661780, lat: 4.554436 }, 
+  "Laboratorios de Ciencias Agroindustriales ": { lng: -75.661780, lat: 4.554436 }, 
 
 };
 
@@ -410,6 +429,7 @@ const edificios = {
       }
      }
     },
+
 "Auditorio Bernardo Ramírez Granada": {
     codigo: "B2-GUADUALES",
     zonaClase: "zona-guaduales",
@@ -436,6 +456,7 @@ const edificios = {
       }
      }
     },
+
   "Instituto Interdisciplinario de las Ciencias": {
     codigo: "B5-GUADUALES",
     zonaClase: "zona-guaduales",
@@ -449,6 +470,7 @@ const edificios = {
       }
      }
     },
+
   "Edificio de Aulas 50 años": {
     codigo: "B6-GUADUALES",
     zonaClase: "zona-guaduales",
@@ -462,6 +484,7 @@ const edificios = {
       }
      }
     },
+
   "Vivero Universidad Jardín": {
     codigo: "B8-GUADUALES",
     zonaClase: "zona-guaduales",
@@ -475,6 +498,7 @@ const edificios = {
       }
      }
     },
+
   "Auditorio Jardín Botánico": {
     codigo: "B9-GUADUALES",
     zonaClase: "zona-guaduales",
@@ -488,6 +512,7 @@ const edificios = {
       }
      }
     },
+
   "Centro de Entrenamiento en Alturas": {
     codigo: "B10-GUADUALES",
     zonaClase: "zona-guaduales",
@@ -556,6 +581,20 @@ const edificios = {
       }
      }
     },
+    "Coliseo": {
+    codigo: "C2-CÁMBULOS",
+    zonaClase: "zona-cambulos",
+    imagenGeneral: "Img/BienestarExt1.jpg",
+    descripcion: "Este espacio forma parte del complejo deportivo y cultural del alma mater. Su propósito principal es promover la salud física y mental de la comunidad académica",
+    niveles:{
+      
+      
+        fotos: ["img/rectoria/nivel1_01.jpg",
+      "img/rectoria/nivel1_02.jpg"
+        ]
+      
+     }
+    },
   "Biblioteca CRAI": {
     codigo: "E2-PLATANILLAS",
     zonaClase: "zona-platanillas",
@@ -570,9 +609,11 @@ const edificios = {
     zonaClase: "zona-platanillas",
     descripcion: "Auditorio Principal de la Universidad del Quindío, nombrado así en honor de uno de sus principales fundadores e ilustre humanista.",
     niveles:{
-      "Nivel 1": "Auditorio principal",
+      "Nivel 1":{
+      descripcion: "Auditorio principal",
        
       }
+     }
     },
 };
 
