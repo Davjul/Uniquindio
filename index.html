@@ -746,14 +746,30 @@ function suavizarPosicion(nueva, anterior) {
 
 
 function seleccionarDestino(nombre) {
-  if (!marcadorUsuario) return;
+
+  console.log("🟡 1. seleccionarDestino ejecutada");
+  console.log("🟡 Destino seleccionado:", nombre);
+  console.log("🟡 Marcador usuario:", marcadorUsuario);
+
+  if (!marcadorUsuario) {
+    console.error("🔴 NO EXISTE marcadorUsuario");
+    return;
+  }
+
+  console.log("🟢 2. Tenemos posición GPS");
 
   destinoActivo = nombre;
 
   const origen = marcadorUsuario.getLngLat();
 
+  console.log("🟢 3. Origen GPS:", origen);
+  console.log("🟢 4. Destino:", destinos[nombre]);
+
   calcularRuta(
-    { lng: origen.lng, lat: origen.lat },
+    {
+      lng: origen.lng,
+      lat: origen.lat
+    },
     destinos[nombre]
   );
 
@@ -764,9 +780,10 @@ function seleccionarDestino(nombre) {
   modoNavegacion = false;
 
   const btn = document.getElementById("btnNavegar");
-if (btn) {
-  btn.classList.remove("oculto");
-}
+
+  if (btn) {
+    btn.classList.remove("oculto");
+  }
 }
 
 
