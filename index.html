@@ -369,11 +369,11 @@ const destinos = {
   "Edificio Facultad de Educación": { lng: -75.6609937, lat: 4.5552083 },
 
   "Edificio Facultad de Ciencias Económicas": { lng: -75.6614602, lat: 4.5549764 },
-  "Auditorio Ciencias Económicas 501": { lng: -75.659720, lat: 4.556094 },
-  "Auditorio Ciencias Económicas 502": { lng: -75.659720, lat: 4.556094 }, 
+  "Auditorio Ciencias Económicas 501": { lng: -75.6614602, lat: 4.5549764 },
+  "Auditorio Ciencias Económicas 502": { lng: -75.6614602, lat: 4.5549764 }, 
 
   "Facultad de Ciencias Agroindustriales": { lng: -75.661455, lat: 4.554960 },
-  "Auditorio Facultad de Ciencias Agroindustriales ": { lng: -75.661780, lat: 4.554436 }, 
+  "Auditorio Facultad de Ciencias Agroindustriales": { lng: -75.661780, lat: 4.554436 }, 
   "Laboratorios de Ciencias Agroindustriales ": { lng: -75.661780, lat: 4.554436 }, 
 
 };
@@ -649,15 +649,17 @@ const edificios = {
       "Nivel 2": "Salas de estudio y bases de datos",
     }
   },
-  "Centro de salud": {
-    codigo: "C2-CÁMBULOS",
-    zonaClase: "zona-cambulos",
-    descripcion: "Centro de Recursos para el Aprendizaje y la Investigación.",
-    niveles: {
-      "Nivel 1": "Préstamos y salas generales",
-      "Nivel 2": "Salas de estudio y bases de datos",
-    }
-  },
+   "Centro de Salud": {
+    codigo: "E2-PLATANILLAS",
+    zonaClase: "zona-platanillas",
+    descripcion: "Auditorio Principal de la Universidad del Quindío, nombrado así en honor de uno de sus principales fundadores e ilustre humanista.",
+    niveles:{
+      "Nivel 1":{
+      descripcion: "Auditorio principal",
+       
+      }
+     }
+    },
   "Auditorio Euclídes Jaramillo Arango": {
     codigo: "E2-PLATANILLAS",
     zonaClase: "zona-platanillas",
@@ -1204,7 +1206,6 @@ rutaRecorridaCoords = [];
   });
 }
 
-  
 
   const bounds = new maplibregl.LngLatBounds();
   data.features[0].geometry.coordinates.forEach(c => bounds.extend(c));
