@@ -1,11 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta
-  name="viewport"
-  content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
-/>
-
 <meta charset="UTF-8">
 <title>Mapa Universidad del Quindío</title>
 
@@ -13,20 +8,8 @@
 <script src="https://unpkg.com/maplibre-gl@3.6.1/dist/maplibre-gl.js"></script>
 
 <style>
-html, body {
-  width: 100%;
-  height: 100%;
-  margin: 0;
-  padding: 0;
-
-  overflow: hidden;   /* 👈 CLAVE */
-}
-
-#map {
-  position: fixed;
-  inset: 0;       
-}
-
+body { margin:0; font-family: sans-serif; }
+#map { width:100vw; height:100vh; }
 
 /* ===== Panel destinos ===== */
 #panel {
@@ -85,7 +68,7 @@ html, body {
   right: 0;
 
   width: 100%;
-  max-height: 30vh;
+  max-height: 60vh;
 
   background: rgba(255,255,255,0.97);
   padding: 16px;
@@ -116,13 +99,13 @@ html, body {
   background: #0066ff;
   color: white;
   border: none;
-  padding: 100 100px;
-  border-radius: 10px;
-  font-size: 10px;
+  padding: 24px 36px;
+  border-radius: 20px;
+  font-size: 14px;
   z-index: 1000;
 }
 .btn-iniciar {
-  bottom: 100px;
+  bottom: 80px;
 }
 
 .oculto {
@@ -183,27 +166,44 @@ html, body {
 
 
 
+.marker-usuario {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: red;
+  box-shadow: 0 0 10px rgba(255,0,0,0.8);
+  border: 2px solid white;
+}
+
 
 /* ===== MÓVIL ===== */
 @media (max-width: 768px) {
+  #panel {
+    width: calc(100% - 20px);
+    left: 10px;
+    bottom: 10px;
+    top: auto;
+  }
+
+  #panel ul {
+    display: flex;
+    overflow-x: auto;
+    gap: 6px;
+  }
+
   #panelEdificio {
     position: absolute;
     bottom: 0;
     left: 0;
     right: 0;
     top: auto;
-
     width: 100%;
-    max-height: 40vh;   /* 👈 ESTE valor manda en móvil */
+    max-height: 40vh;
     border-radius: 16px 16px 0 0;
+    overflow-y: auto;
+    z-index: 25;
   }
 
-
-#panel ul {
-    display: flex;
-    overflow-x: auto;
-    gap: 6px;
-  }
 
   .imagen-edificio {
     max-height: 120px;
@@ -227,17 +227,11 @@ html, body {
 .buscador-movil input {
   width: 100%;
   padding: 10px 8px;
-
-  font-size: 16px;        
-  line-height: 1.4;
-
+  font-size: 18px;
   border-radius: 8px;
   border: 1px solid #ddd;
   outline: none;
-
-  touch-action: auto;   
 }
-
 
 #sugerencias {
   list-style: none;
@@ -325,12 +319,10 @@ const destinos = {
 
   "Edificio de Ciencias Básicas y Tecnologías": { lng: -75.6597840, lat: 4.5529046 },
   "Auditorio Bernardo Ramírez Granada": { lng: -75.6600830, lat: 4.5526310 },
-
+ 
   "Instituto Interdisciplinario de las Ciencias": { lng: -75.6597762, lat: 4.5530214 },
   "Edificio de Aulas 50 años": { lng: -75.6600960, lat: 4.5534352 },
-
   "Vivero Universidad Jardín": { lng: -75.6608072, lat: 4.5534410 },
-  
   "Auditorio Jardín Botánico": { lng: -75.6608063, lat: 4.5533636 },  
   "Centro de Entrenamiento en Alturas": { lng: -75.6612422, lat: 4.5532833 },
   "Zona Intercultural": { lng: -75.6613910, lat: 4.5531892 },  
@@ -348,28 +340,14 @@ const destinos = {
   "Media Torta - Teatro al aire libre": { lng: -75.6590750, lat: 4.5555646 },
   "Centro de Salud": { lng: -75.6587919, lat: 4.5556343 },
 
-  "Ciencias de la Salud": { lng: -75.6587961, lat: 4.5562350 },
-  
-  "Laboratorio de Ciencias Biomédicas": { lng: -75.660125, lat: 4.556482 }, 
-
-  "Biblioteca CRAI": { lng: -75.6595813, lat: 4.5564278 },
-  "Auditorio Euclídes Jaramillo Arango": { lng: -75.659720, lat: 4.556094 },
-  "Ludoteca Infantil": { lng: -75.659430, lat: 4.555845 },  
-  "Zona de Estudio María Cano": { lng: -75.659586, lat: 4.556174 }, 
-  "Capilla Universitaria": { lng: -75.659342, lat: 4.556220 }, 
-  "Oficina de Publicaciones": { lng: -75.659575, lat: 4.556145 }, 
-  
-
-
-  "Facultad de Ingeniería": { lng: -75.6600693, lat: 4.5559045 },
-  "Auditorio Fabio Arias Vélez": { lng: -75.6600693, lat: 4.5559045 },
-  
   "Edificio Facultad de Educación": { lng: -75.6609937, lat: 4.5552083 },
+  "Edificio Facultad de Económicas": { lng: -75.6614602, lat: 4.5549764 },
+  "Facultad de Agroindustria": { lng: -75.6616901, lat: 4.5547966 },
 
-  "Edificio Facultad de Ciencias Económicas": { lng: -75.6614602, lat: 4.5549764 },
-  
-  "Facultad de Ciencias Agroindustriales": { lng: -75.661455, lat: 4.554960 },
-  
+  "Ciencias de la Salud": { lng: -75.6587961, lat: 4.5562350 },
+  "Biblioteca CRAI": { lng: -75.6595813, lat: 4.5564278 },
+  "Facultad de Ingeniería": { lng: -75.6600693, lat: 4.5559045 }
+
 };
 
 // ================= EDIFICIOS =================
@@ -423,7 +401,6 @@ const edificios = {
       }
      }
     },
-
 "Auditorio Bernardo Ramírez Granada": {
     codigo: "B2-GUADUALES",
     zonaClase: "zona-guaduales",
@@ -450,7 +427,6 @@ const edificios = {
       }
      }
     },
-
   "Instituto Interdisciplinario de las Ciencias": {
     codigo: "B5-GUADUALES",
     zonaClase: "zona-guaduales",
@@ -464,7 +440,6 @@ const edificios = {
       }
      }
     },
-
   "Edificio de Aulas 50 años": {
     codigo: "B6-GUADUALES",
     zonaClase: "zona-guaduales",
@@ -478,7 +453,6 @@ const edificios = {
       }
      }
     },
-
   "Vivero Universidad Jardín": {
     codigo: "B8-GUADUALES",
     zonaClase: "zona-guaduales",
@@ -492,7 +466,6 @@ const edificios = {
       }
      }
     },
-
   "Auditorio Jardín Botánico": {
     codigo: "B9-GUADUALES",
     zonaClase: "zona-guaduales",
@@ -506,7 +479,6 @@ const edificios = {
       }
      }
     },
-
   "Centro de Entrenamiento en Alturas": {
     codigo: "B10-GUADUALES",
     zonaClase: "zona-guaduales",
@@ -575,65 +547,6 @@ const edificios = {
       }
      }
     },
-    "Coliseo": {
-    codigo: "C2-CÁMBULOS",
-    zonaClase: "zona-cambulos",
-    imagenGeneral: "Img/BienestarExt1.jpg",
-    descripcion: "Este espacio forma parte del complejo deportivo y cultural del alma mater. Su propósito principal es promover la salud física y mental de la comunidad académica",
-    niveles:{
-      "Nivel 1":{
-      descripcion: "Atención al ciudadano y recepción",
-        fotos: ["img/rectoria/nivel1_01.jpg",
-      "img/rectoria/nivel1_02.jpg"
-        ]
-      }
-     }
-    },
-    "Piscina": {
-    codigo: "C2-CÁMBULOS",
-    zonaClase: "zona-cambulos",
-    imagenGeneral: "Img/BienestarExt1.jpg",
-    descripcion: "Este espacio forma parte del complejo deportivo y cultural del alma mater. Su propósito principal es promover la salud física y mental de la comunidad académica",
-    niveles:{
-      "Nivel 1":{
-      descripcion: "Atención al ciudadano y recepción",
-        fotos: ["img/rectoria/nivel1_01.jpg",
-      "img/rectoria/nivel1_02.jpg"
-        ]
-      }
-     }
-    },
-  
-    "Cancha de fútbol y pista atlética": {
-    codigo: "C2-CÁMBULOS",
-    zonaClase: "zona-cambulos",
-    imagenGeneral: "Img/BienestarExt1.jpg",
-    descripcion: "Este espacio forma parte del complejo deportivo y cultural del alma mater. Su propósito principal es promover la salud física y mental de la comunidad académica",
-    niveles:{
-      "Nivel 1":{
-      descripcion: "Atención al ciudadano y recepción",
-        fotos: ["img/rectoria/nivel1_01.jpg",
-      "img/rectoria/nivel1_02.jpg"
-        ]
-      }
-     }
-    },
-
-    "Media Torta - Teatro al aire libre": {
-    codigo: "C2-CÁMBULOS",
-    zonaClase: "zona-cambulos",
-    imagenGeneral: "Img/BienestarExt1.jpg",
-    descripcion: "Este espacio forma parte del complejo deportivo y cultural del alma mater. Su propósito principal es promover la salud física y mental de la comunidad académica",
-    niveles:{
-      "Nivel 1":{
-      descripcion: "Atención al ciudadano y recepción",
-        fotos: ["img/rectoria/nivel1_01.jpg",
-      "img/rectoria/nivel1_02.jpg"
-        ]
-      }
-     }
-    },
-
   "Biblioteca CRAI": {
     codigo: "E2-PLATANILLAS",
     zonaClase: "zona-platanillas",
@@ -641,30 +554,9 @@ const edificios = {
     niveles: {
       "Nivel 1": "Préstamos y salas generales",
       "Nivel 2": "Salas de estudio y bases de datos",
+      "Nivel 3": "Hemeroteca y salas silenciosas"
     }
-  },
-   "Centro de Salud": {
-    codigo: "E2-PLATANILLAS",
-    zonaClase: "zona-platanillas",
-    descripcion: "Auditorio Principal de la Universidad del Quindío, nombrado así en honor de uno de sus principales fundadores e ilustre humanista.",
-    niveles:{
-      "Nivel 1":{
-      descripcion: "Auditorio principal",
-       
-      }
-     }
-    },
-  "Auditorio Euclídes Jaramillo Arango": {
-    codigo: "E2-PLATANILLAS",
-    zonaClase: "zona-platanillas",
-    descripcion: "Auditorio Principal de la Universidad del Quindío, nombrado así en honor de uno de sus principales fundadores e ilustre humanista.",
-    niveles:{
-      "Nivel 1":{
-      descripcion: "Auditorio principal",
-       
-      }
-     }
-    },
+  }
 };
 
 // ================= MAPA =================
@@ -721,18 +613,6 @@ map.dragRotate.enable();
 map.touchZoomRotate.enableRotation();
 
 // ================= FUNCIONES =================
-function puntoAdelante(lng, lat, bearing, metros = 20) {
-  const R = 6378137; // radio tierra
-  const brng = bearing * Math.PI / 180;
-
-  const dLat = metros * Math.cos(brng) / R;
-  const dLng = metros * Math.sin(brng) / (R * Math.cos(lat * Math.PI / 180));
-
-  return [
-    lng + (dLng * 180 / Math.PI),
-    lat + (dLat * 180 / Math.PI)
-  ];
-}
 
 
 function suavizarPosicion(nueva, anterior) {
@@ -746,30 +626,14 @@ function suavizarPosicion(nueva, anterior) {
 
 
 function seleccionarDestino(nombre) {
-
-  console.log("🟡 1. seleccionarDestino ejecutada");
-  console.log("🟡 Destino seleccionado:", nombre);
-  console.log("🟡 Marcador usuario:", marcadorUsuario);
-
-  if (!marcadorUsuario) {
-    console.error("🔴 NO EXISTE marcadorUsuario");
-    return;
-  }
-
-  console.log("🟢 2. Tenemos posición GPS");
+  if (!marcadorUsuario) return;
 
   destinoActivo = nombre;
 
   const origen = marcadorUsuario.getLngLat();
 
-  console.log("🟢 3. Origen GPS:", origen);
-  console.log("🟢 4. Destino:", destinos[nombre]);
-
   calcularRuta(
-    {
-      lng: origen.lng,
-      lat: origen.lat
-    },
+    { lng: origen.lng, lat: origen.lat },
     destinos[nombre]
   );
 
@@ -780,10 +644,9 @@ function seleccionarDestino(nombre) {
   modoNavegacion = false;
 
   const btn = document.getElementById("btnNavegar");
-
-  if (btn) {
-    btn.classList.remove("oculto");
-  }
+if (btn) {
+  btn.classList.remove("oculto");
+}
 }
 
 
@@ -1022,23 +885,13 @@ recortarRutaDesdePosicion(nuevaPos);
 
 
   // Cámara
-// punto adelantado según orientación
-const centroVisual = puntoAdelante(
-  nuevaPos[0],
-  nuevaPos[1],
-  nuevoBearing,
-  ES_MOVIL ? 25 : 18
-);
-
-map.easeTo({
-  center: centroVisual,
-  bearing: nuevoBearing,
-  zoom: ES_MOVIL ? 19.5 : 18.8,
-  pitch: ES_MOVIL ? 80 : 70,
-  duration: 700
-});
-
-
+  map.easeTo({
+    center: nuevaPos,
+    bearing: nuevoBearing,
+    zoom: ES_MOVIL ? 19.5 : 18.8,
+    pitch: ES_MOVIL ? 80 : 70,
+    duration: 700
+  });
 
   // ===== RUTA RECORRIDA =====
   rutaRecorridaCoords.push(nuevaPos);
@@ -1103,25 +956,13 @@ ultimaPosicionSuavizada = null;
   map.doubleClickZoom.enable();
   map.touchZoomRotate.enable();
 
-  //  Cámara inmersiva 
-const pos = marcadorUsuario.getLngLat();
-const centroInicial = puntoAdelante(
-  pos.lng,
-  pos.lat,
-  map.getBearing(),
-  25
-);
-
-map.easeTo({
-  center: centroInicial,
-  zoom: 19.5,
-  pitch: 80,
-  bearing: map.getBearing(),
-  duration: 1200
-});
-
-
-
+  // 🎯 Cámara inmersiva inicial
+  map.easeTo({
+    zoom: 19.5,
+    pitch: 80,
+    bearing: map.getBearing(),
+    duration: 1200
+  });
 
   // 📡 GPS continuo
   watchId = navigator.geolocation.watchPosition(
@@ -1166,139 +1007,62 @@ function desactivarModoNavegacion() {
 
 // ================= RUTA =================
 async function calcularRuta(origen, destino) {
-  try {
-    console.log("🚀 Calculando ruta...");
-    console.log("Origen:", origen);
-    console.log("Destino:", destino);
+  const url = `https://api.openrouteservice.org/v2/directions/foot-walking?api_key=${ORS_API_KEY}&start=${origen.lng},${origen.lat}&end=${destino.lng},${destino.lat}&format=geojson`;
 
-    if (!origen || !destino) {
-      throw new Error("Origen o destino inválido");
-    }
+  const response = await fetch(url);
+  const data = await response.json();
+  if (!data.features || !data.features.length) return;
+  rutaCompleta = data.features[0].geometry.coordinates;
+rutaRecorridaCoords = [];
 
-    const url = `https://api.openrouteservice.org/v2/directions/foot-walking?api_key=${ORS_API_KEY}&start=${origen.lng},${origen.lat}&end=${destino.lng},${destino.lat}&format=geojson`;
+  
 
-    console.log("🌐 URL ORS:", url);
+  const resumen = data.features[0].properties.summary;
+  document.getElementById("infoRuta").innerHTML = `
+    <strong>Ruta activa</strong><br>
+    📏 ${(resumen.distance/1000).toFixed(2)} km<br>
+    ⏱️ ${Math.round(resumen.duration/60)} min
+  `;
 
-    const response = await fetch(url);
+  if (map.getLayer("ruta")) map.removeLayer("ruta");
+  if (map.getSource("ruta")) map.removeSource("ruta");
 
-    console.log("📡 Estado ORS:", response.status);
-
-    const data = await response.json();
-
-    console.log("📦 Respuesta ORS:", data);
-
-    if (!response.ok) {
-      throw new Error(
-        `Error ORS ${response.status}: ${
-          data.error?.message || data.message || "Error desconocido"
-        }`
-      );
-    }
-
-    if (!data.features || !data.features.length) {
-      throw new Error("ORS no devolvió ninguna ruta");
-    }
-
-    const ruta = data.features[0];
-
-    if (
-      !ruta.geometry ||
-      !ruta.geometry.coordinates ||
-      ruta.geometry.coordinates.length === 0
-    ) {
-      throw new Error("La ruta no contiene coordenadas");
-    }
-
-    rutaCompleta = ruta.geometry.coordinates;
-    rutaRecorridaCoords = [];
-
-    const resumen = ruta.properties.summary;
-
-    document.getElementById("infoRuta").innerHTML = `
-      <strong>Ruta activa</strong><br>
-      📏 ${(resumen.distance / 1000).toFixed(2)} km<br>
-      ⏱️ ${Math.round(resumen.duration / 60)} min
-    `;
-
-    // Eliminar ruta anterior
-    if (map.getLayer("ruta")) {
-      map.removeLayer("ruta");
-    }
-
-    if (map.getSource("ruta")) {
-      map.removeSource("ruta");
-    }
-
-    // Agregar nueva ruta
-    map.addSource("ruta", {
-      type: "geojson",
-      data: data
-    });
-
-    map.addLayer({
-      id: "ruta",
-      type: "line",
-      source: "ruta",
-      paint: {
-        "line-color": "#0066ff",
-        "line-width": 6,
-        "line-opacity": 1
+  map.addSource("ruta", { type: "geojson", data });
+  map.addLayer({
+    id: "ruta",
+    type: "line",
+    source: "ruta",
+    paint: { "line-color": "#0066ff", "line-width": 6 }
+  });
+  if (!map.getSource("ruta-recorrida")) {
+  map.addSource("ruta-recorrida", {
+    type: "geojson",
+    data: {
+      type: "Feature",
+      geometry: {
+        type: "LineString",
+        coordinates: []
       }
-    });
-
-    console.log("✅ Ruta azul agregada correctamente");
-
-    // Crear ruta recorrida
-    if (!map.getSource("ruta-recorrida")) {
-
-      map.addSource("ruta-recorrida", {
-        type: "geojson",
-        data: {
-          type: "Feature",
-          geometry: {
-            type: "LineString",
-            coordinates: []
-          }
-        }
-      });
-
-      map.addLayer({
-        id: "ruta-recorrida",
-        type: "line",
-        source: "ruta-recorrida",
-        paint: {
-          "line-color": "#ff0000",
-          "line-width": 6,
-          "line-opacity": 0
-        }
-      });
-
     }
+  });
 
-    // Ajustar mapa a la ruta
-    const bounds = new maplibregl.LngLatBounds();
-
-    ruta.geometry.coordinates.forEach(coord => {
-      bounds.extend(coord);
-    });
-
-    map.fitBounds(bounds, {
-      padding: 80,
-      pitch: 60
-    });
-
-  } catch (error) {
-
-    console.error("❌ ERROR CALCULANDO RUTA:", error);
-
-    document.getElementById("infoRuta").innerHTML = `
-      <strong>Error al calcular la ruta</strong><br>
-      ${error.message}
-    `;
-  }
+  map.addLayer({
+    id: "ruta-recorrida",
+    type: "line",
+    source: "ruta-recorrida",
+    paint: {
+      "line-color": "#ff0000",
+      "line-width": 6,
+      "line-opacity": 0
+    }
+  });
 }
 
- 
+
+  const bounds = new maplibregl.LngLatBounds();
+  data.features[0].geometry.coordinates.forEach(c => bounds.extend(c));
+  map.fitBounds(bounds, { padding: 50, pitch: 60 });
+}
 // ================= BOTÓN INICIAR NAVEGACIÓN =================
 const btnNavegar = document.getElementById("btnNavegar");
 
