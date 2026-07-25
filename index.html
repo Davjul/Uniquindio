@@ -752,10 +752,138 @@ function seleccionarDestino(nombre) {
 
   const origen = marcadorUsuario.getLngLat();
 
-  calcularRuta(
-    { lng: origen.lng, lat: origen.lat },
-    destinos[nombre]
-  );
+  async function calcularRuta(origen, destino) {
+  try {
+    console.log("🚀 Calculando ruta...");
+    console.log("Origen:", origen);
+    console.log("Destino:", destino);
+
+    if (!origen || !destino) {
+      throw new Error("Origen o destino inválido");
+    }
+
+    const url = `https://api.openrouteservice.org/v2/directions/foot-walking?api_key=${ORS_API_KEY}&start=${origen.lng},${origen.lat}&end=${destino.lng},${destino.lat}&format=geojson`;
+
+    console.log("🌐 URL ORS:", url);
+
+    const response = await fetch(url);
+
+    console.log("📡 Estado ORS:", response.status);
+
+    const data = await response.json();
+
+    console.log("📦 Respuesta ORS:", data);
+
+    if (!response.ok) {
+      throw new Error(
+        `Error ORS ${response.status}: ${
+          data.error?.message || data.message || "Error desconocido"
+        }`
+      );
+    }
+
+    if (!data.features || !data.features.length) {
+      throw new Error("ORS no devolvió ninguna ruta");
+    }
+
+    const ruta = data.features[0];
+
+    if (
+      !ruta.geometry ||
+      !ruta.geometry.coordinates ||
+      ruta.geometry.coordinates.length === 0
+    ) {
+      throw new Error("La ruta no contiene coordenadas");
+    }
+
+    rutaCompleta = ruta.geometry.coordinates;
+    rutaRecorridaCoords = [];
+
+    const resumen = ruta.properties.summary;
+
+    document.getElementById("infoRuta").innerHTML = `
+      <strong>Ruta activa</strong><br>
+      📏 ${(resumen.distance / 1000).toFixed(2)} km<br>
+      ⏱️ ${Math.round(resumen.duration / 60)} min
+    `;
+
+    // Eliminar ruta anterior
+    if (map.getLayer("ruta")) {
+      map.removeLayer("ruta");
+    }
+
+    if (map.getSource("ruta")) {
+      map.removeSource("ruta");
+    }
+
+    // Agregar nueva ruta
+    map.addSource("ruta", {
+      type: "geojson",
+      data: data
+    });
+
+    map.addLayer({
+      id: "ruta",
+      type: "line",
+      source: "ruta",
+      paint: {
+        "line-color": "#0066ff",
+        "line-width": 6,
+        "line-opacity": 1
+      }
+    });
+
+    console.log("✅ Ruta azul agregada correctamente");
+
+    // Crear ruta recorrida
+    if (!map.getSource("ruta-recorrida")) {
+
+      map.addSource("ruta-recorrida", {
+        type: "geojson",
+        data: {
+          type: "Feature",
+          geometry: {
+            type: "LineString",
+            coordinates: []
+          }
+        }
+      });
+
+      map.addLayer({
+        id: "ruta-recorrida",
+        type: "line",
+        source: "ruta-recorrida",
+        paint: {
+          "line-color": "#ff0000",
+          "line-width": 6,
+          "line-opacity": 0
+        }
+      });
+
+    }
+
+    // Ajustar mapa a la ruta
+    const bounds = new maplibregl.LngLatBounds();
+
+    ruta.geometry.coordinates.forEach(coord => {
+      bounds.extend(coord);
+    });
+
+    map.fitBounds(bounds, {
+      padding: 80,
+      pitch: 60
+    });
+
+  } catch (error) {
+
+    console.error("❌ ERROR CALCULANDO RUTA:", error);
+
+    document.getElementById("infoRuta").innerHTML = `
+      <strong>Error al calcular la ruta</strong><br>
+      ${error.message}
+    `;
+  }
+}
 
   mostrarEdificio(nombre);
 
