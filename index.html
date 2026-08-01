@@ -1007,61 +1007,105 @@ function desactivarModoNavegacion() {
 
 // ================= RUTA =================
 async function calcularRuta(origen, destino) {
-  const url = `https://api.openrouteservice.org/v2/directions/foot-walking?api_key=${ORS_API_KEY}&start=${origen.lng},${origen.lat}&end=${destino.lng},${destino.lat}&format=geojson`;
 
-  const response = await fetch(url);
-  const data = await response.json();
-  if (!data.features || !data.features.length) return;
-  rutaCompleta = data.features[0].geometry.coordinates;
-rutaRecorridaCoords = [];
+  try {
 
-  
+    const url =
+      `https://ors-proxy.djhuertas.workers.dev/?start=${origen.lng},${origen.lat}&end=${destino.lng},${destino.lat}`;
 
-  const resumen = data.features[0].properties.summary;
-  document.getElementById("infoRuta").innerHTML = `
-    <strong>Ruta activa</strong><br>
-    📏 ${(resumen.distance/1000).toFixed(2)} km<br>
-    ⏱️ ${Math.round(resumen.duration/60)} min
-  `;
+    console.log("Calculando ruta...");
+    console.log(url);
 
-  if (map.getLayer("ruta")) map.removeLayer("ruta");
-  if (map.getSource("ruta")) map.removeSource("ruta");
+    const response = await fetch(url);
 
-  map.addSource("ruta", { type: "geojson", data });
-  map.addLayer({
-    id: "ruta",
-    type: "line",
-    source: "ruta",
-    paint: { "line-color": "#0066ff", "line-width": 6 }
-  });
-  if (!map.getSource("ruta-recorrida")) {
-  map.addSource("ruta-recorrida", {
-    type: "geojson",
-    data: {
-      type: "Feature",
-      geometry: {
-        type: "LineString",
-        coordinates: []
+    if (!response.ok) {
+      throw new Error(`Servidor respondió ${response.status}`);
+    }
+
+    const data = await response.json();
+
+    if (!data.features || data.features.length === 0) {
+      throw new Error("No se recibió ninguna ruta");
+    }
+
+    rutaCompleta = data.features[0].geometry.coordinates;
+    rutaRecorridaCoords = [];
+
+    const resumen = data.features[0].properties.summary;
+
+    document.getElementById("infoRuta").innerHTML = `
+      <strong>Ruta activa</strong><br>
+      📏 ${(resumen.distance/1000).toFixed(2)} km<br>
+      ⏱️ ${Math.round(resumen.duration/60)} min
+    `;
+
+    if (map.getLayer("ruta")) map.removeLayer("ruta");
+    if (map.getSource("ruta")) map.removeSource("ruta");
+
+    map.addSource("ruta", {
+      type: "geojson",
+      data: data
+    });
+
+    map.addLayer({
+      id: "ruta",
+      type: "line",
+      source: "ruta",
+      paint: {
+        "line-color": "#0066ff",
+        "line-width": 6,
+        "line-opacity": 1
       }
+    });
+
+    if (!map.getSource("ruta-recorrida")) {
+
+      map.addSource("ruta-recorrida", {
+        type: "geojson",
+        data: {
+          type: "Feature",
+          geometry: {
+            type: "LineString",
+            coordinates: []
+          }
+        }
+      });
+
+      map.addLayer({
+        id: "ruta-recorrida",
+        type: "line",
+        source: "ruta-recorrida",
+        paint: {
+          "line-color": "#ff0000",
+          "line-width": 6,
+          "line-opacity": 0
+        }
+      });
+
     }
-  });
 
-  map.addLayer({
-    id: "ruta-recorrida",
-    type: "line",
-    source: "ruta-recorrida",
-    paint: {
-      "line-color": "#ff0000",
-      "line-width": 6,
-      "line-opacity": 0
-    }
-  });
-}
+    const bounds = new maplibregl.LngLatBounds();
 
+    data.features[0].geometry.coordinates.forEach(c => bounds.extend(c));
 
-  const bounds = new maplibregl.LngLatBounds();
-  data.features[0].geometry.coordinates.forEach(c => bounds.extend(c));
-  map.fitBounds(bounds, { padding: 50, pitch: 60 });
+    map.fitBounds(bounds, {
+      padding: 60,
+      pitch: 60
+    });
+
+    console.log("Ruta creada correctamente.");
+
+  } catch (error) {
+
+    console.error(error);
+
+    document.getElementById("infoRuta").innerHTML = `
+      <strong>Error calculando ruta</strong><br>
+      ${error.message}
+    `;
+
+  }
+
 }
 // ================= BOTÓN INICIAR NAVEGACIÓN =================
 const btnNavegar = document.getElementById("btnNavegar");
